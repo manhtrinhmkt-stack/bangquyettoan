@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="https://vitejs.dev/logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bảng Quyết Toán Công Việc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Nhập bộ font Be Vietnam Pro chuyên nghiệp cho tiếng Việt */
+      @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+      
+      body {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        letter-spacing: -0.011em;
+      }
+      
+      /* Ẩn nút điều hướng số cho input */
+      input[type=number]::-webkit-inner-spin-button, 
+      input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none; 
+        margin: 0; 
+      }
+
+      /* Kiểu input gạch chân kiểu giấy tờ */
+      .input-paper {
+        border: none;
+        border-bottom: 1px dashed #cbd5e1;
+        border-radius: 0;
+        padding-left: 0;
+        padding-right: 0;
+        background: transparent;
+        transition: border-color 0.2s;
+        font-family: inherit;
+      }
+      .input-paper:focus {
+        border-bottom: 1px solid #2563eb;
+        outline: none;
+        box-shadow: none;
+      }
+      
+      /* Cấu hình in ấn chuyên nghiệp */
+      @media print {
+        @page { 
+            margin: 8mm 8mm 5mm 8mm; 
+        } 
+        
+        html, body {
+            height: auto !important;
+            overflow: visible !important;
+        }
+
+        body { 
+            background-color: white !important; 
+            color: #000 !important; 
+            /* Sử dụng Be Vietnam Pro cho cả bản in để tạo sự đồng bộ hiện đại */
+            font-family: 'Be Vietnam Pro', sans-serif !important; 
+            font-size: 12.5pt !important; 
+            line-height: 1.4 !important;
+        }
+
+        .no-print { display: none !important; }
+        
+        .print-container {
+            box-shadow: none !important;
+            border: none !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        input, select, textarea {
+            border: none !important;
+            background: transparent !important;
+            padding: 0 !important;
+            appearance: none;
+            box-shadow: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            color: #000 !important;
+            font-weight: normal !important;
+            text-align: inherit;
+        }
+        
+        /* Tiện ích kích thước chữ khi in */
+        .print-text-18 { font-size: 18pt !important; }
+        .print-text-13-5 { font-size: 13.5pt !important; }
+        .print-text-13 { font-size: 13pt !important; }
+        .print-text-12 { font-size: 12pt !important; }
+        .print-text-11 { font-size: 11pt !important; }
+
+        .payment-box-frame {
+            border: 1pt solid #000 !important;
+            border-radius: 0 !important;
+            padding: 10px 12px !important;
+            font-size: 11pt !important; /* Cập nhật 11pt theo yêu cầu */
+            width: fit-content !important;
+            min-width: 320px;
+            page-break-inside: avoid;
+            margin-top: 8px;
+        }
+
+        .payment-line {
+            margin-bottom: 4px !important;
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            font-size: 11pt !important;
+        }
+
+        table { 
+            width: 100% !important; 
+            border-collapse: collapse !important; 
+            table-layout: fixed; 
+            margin-bottom: 1rem;
+        }
+        
+        th, td { 
+            border: 1px solid #000 !important; 
+            padding: 4px 5px !important;
+            vertical-align: middle;
+            font-size: 12pt !important; 
+            line-height: 1.2 !important;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+
+        /* Portrait-specific table adjustments: Nội dung bảng khổ dọc 12pt */
+        .is-portrait th, .is-portrait td {
+            font-size: 12pt !important;
+            padding: 4px 4px !important;
+        }
+        
+        th { 
+            background-color: #f5f5f5 !important; 
+            font-weight: 700 !important;
+            text-align: center !important;
+        }
+
+        .cell-content {
+            word-break: break-word;
+            text-align: left;
+            white-space: pre-wrap;
+        }
+
+        ::placeholder { color: transparent; }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
+  }
+}
+</script>
+</head>
+  <body class="bg-slate-100 text-slate-900 h-screen overflow-y-auto antialiased">
+    <div id="root"></div>
+  </body>
+</html>
