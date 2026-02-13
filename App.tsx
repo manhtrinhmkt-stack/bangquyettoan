@@ -73,7 +73,7 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
             <div className="flex items-center space-x-3 text-blue-700">
               <Box size={24} strokeWidth={2.5} />
-              <span className="font-bold text-xl tracking-tight hidden sm:inline">Quyết Toán Pro</span>
+              <span className="font-bold text-xl tracking-tight hidden sm:inline">HỆ THỐNG BÁO QUYẾT TOÁN</span>
               <span className="font-bold text-xl tracking-tight sm:hidden">QT Pro</span>
             </div>
 
