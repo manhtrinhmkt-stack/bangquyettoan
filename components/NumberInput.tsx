@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { formatVND, parseVND } from '../utils/numberUtils';
 
@@ -21,23 +22,40 @@ export const NumberInput: React.FC<NumberInputProps> = ({
   variant = 'default'
 }) => {
   const [displayValue, setDisplayValue] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const isFocused = useRef(false);
 
+  // Cập nhật giá trị hiển thị khi giá trị thực thay đổi từ bên ngoài (ví dụ tính toán lại)
   useEffect(() => {
-    setDisplayValue(formatVND(value));
+    if (!isFocused.current) {
+      setDisplayValue(formatVND(value));
+    }
   }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
+    let inputValue = e.target.value;
+    
+    // Chỉ cho phép số, dấu chấm và dấu phẩy
     if (!/^[\d.,]*$/.test(inputValue)) return;
+    
+    // Chỉ cho phép tối đa 1 dấu phẩy thập phân
     if ((inputValue.match(/,/g) || []).length > 1) return;
 
     setDisplayValue(inputValue);
+    
+    // Parse để cập nhật giá trị số thực cho logic tính toán
     const numericValue = parseVND(inputValue);
-    onChange(numericValue);
+    if (!isNaN(numericValue)) {
+      onChange(numericValue);
+    }
+  };
+
+  const handleFocus = () => {
+    isFocused.current = true;
   };
 
   const handleBlur = () => {
+    isFocused.current = false;
+    // Khi thoát focus, định dạng lại số cho đẹp (ví dụ "1,50" -> "1,5")
     setDisplayValue(formatVND(value));
   };
 
@@ -55,11 +73,11 @@ export const NumberInput: React.FC<NumberInputProps> = ({
 
   return (
     <input
-      ref={inputRef}
       type="text"
       inputMode="decimal"
       value={displayValue}
       onChange={handleChange}
+      onFocus={handleFocus}
       onBlur={handleBlur}
       placeholder={placeholder}
       readOnly={readOnly}
