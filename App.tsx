@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { Plus, Printer, Box, Layout, Smartphone } from 'lucide-react';
+import { Plus, Printer, Box, Layout, Save, Check } from 'lucide-react';
 import { RowData } from './types';
 import { INITIAL_ROW } from './constants';
 import SettlementRow from './components/SettlementRow';
@@ -17,6 +17,30 @@ const App: React.FC = () => {
   const [creatorName, setCreatorName] = useState("");
   const [rows, setRows] = useState<RowData[]>([{ ...INITIAL_ROW, id: crypto.randomUUID() }]);
   const [orientation, setOrientation] = useState<'landscape' | 'portrait'>('landscape');
+  const [isSaved, setIsSaved] = useState(false);
+
+  // Load saved info from localStorage on mount
+  useEffect(() => {
+    const savedBank = localStorage.getItem('qt_bankName');
+    const savedAccount = localStorage.getItem('qt_accountNumber');
+    const savedHolder = localStorage.getItem('qt_accountHolder');
+    const savedCreator = localStorage.getItem('qt_creatorName');
+
+    if (savedBank) setBankName(savedBank);
+    if (savedAccount) setAccountNumber(savedAccount);
+    if (savedHolder) setAccountHolder(savedHolder);
+    if (savedCreator) setCreatorName(savedCreator);
+  }, []);
+
+  const handleSaveDefaults = () => {
+    localStorage.setItem('qt_bankName', bankName);
+    localStorage.setItem('qt_accountNumber', accountNumber);
+    localStorage.setItem('qt_accountHolder', accountHolder);
+    localStorage.setItem('qt_creatorName', creatorName);
+    
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 2000);
+  };
 
   // Dynamic print orientation control
   useEffect(() => {
@@ -73,7 +97,7 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
             <div className="flex items-center space-x-3 text-blue-700">
               <Box size={24} strokeWidth={2.5} />
-              <span className="font-bold text-xl tracking-tight hidden sm:inline">HỆ THỐNG BÁO QUYẾT TOÁN</span>
+              <span className="font-bold text-xl tracking-tight hidden sm:inline">Quyết Toán Pro</span>
               <span className="font-bold text-xl tracking-tight sm:hidden">QT Pro</span>
             </div>
 
@@ -193,7 +217,16 @@ const App: React.FC = () => {
 
                <div className="flex flex-col md:flex-row justify-between items-start print:flex-row print:mt-1 gap-6 md:gap-0">
                   <div className={`payment-box-frame border border-slate-200 rounded-xl p-4 bg-slate-50 print:bg-transparent w-full md:w-auto ${isPortrait ? 'md:min-w-[380px] print:w-[380px]' : 'md:min-w-[420px]'}`}>
-                     <h4 className="font-bold underline mb-3 print:no-underline print:uppercase print:mb-3 print:text-11">Thông tin thanh toán:</h4>
+                     <div className="flex justify-between items-center mb-3">
+                        <h4 className="font-bold underline print:no-underline print:uppercase print:mb-0 print:text-11">Thông tin thanh toán:</h4>
+                        <button 
+                          onClick={handleSaveDefaults}
+                          className={`no-print flex items-center gap-1.5 px-2 py-1 rounded text-xs font-bold transition-all ${isSaved ? 'bg-green-100 text-green-700' : 'bg-white text-blue-600 hover:bg-blue-50 border border-blue-200 shadow-sm'}`}
+                        >
+                          {isSaved ? <Check size={14} /> : <Save size={14} />}
+                          {isSaved ? 'Đã ghi nhớ' : 'Ghi nhớ'}
+                        </button>
+                     </div>
                      <div className="flex flex-col print-text-11">
                         <div className="payment-line whitespace-nowrap">
                            <span className="text-slate-500 font-semibold print:text-black w-[135px] shrink-0">Ngân hàng:</span>
@@ -210,7 +243,6 @@ const App: React.FC = () => {
                      </div>
                   </div>
 
-                  {/* Tăng print:-translate-x-44 lên translate-x-60 cho khổ ngang để xích trái nhiều hơn */}
                   <div className={`text-center w-full md:w-[250px] print:w-[240px] print-text-12 pt-2 ${isPortrait ? 'print:-translate-x-12' : 'print:-translate-x-60'}`}>
                       <p className="font-bold uppercase mb-1">Người lập biểu</p>
                       <p className="italic text-xs mb-12 no-print">(Họ tên, chữ ký)</p>
@@ -218,7 +250,6 @@ const App: React.FC = () => {
                       <div className="no-print mb-2">
                          <input type="text" value={creatorName} onChange={(e) => setCreatorName(e.target.value)} placeholder="Nhập tên..." className="input-paper text-center w-full" />
                       </div>
-                      {/* Bỏ in đậm tên người lập biểu khi in bằng class print:font-normal */}
                       <p className="font-bold text-lg print:font-normal print:text-lg">{creatorName}</p>
                   </div>
                </div>
