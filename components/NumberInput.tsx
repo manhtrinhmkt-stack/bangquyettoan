@@ -31,6 +31,29 @@ export const NumberInput: React.FC<NumberInputProps> = ({
     }
   }, [value]);
 
+  const formatWhileTyping = (val: string) => {
+    if (!val) return "";
+    
+    // Tách phần nguyên và phần thập phân (dùng dấu phẩy theo chuẩn VN)
+    const parts = val.split(',');
+    let integerPart = parts[0].replace(/\./g, ""); // Bỏ dấu chấm cũ để định dạng lại
+    const decimalPart = parts.length > 1 ? parts[1] : null;
+
+    // Định dạng phần nguyên có dấu chấm hàng nghìn
+    if (integerPart) {
+      const num = parseInt(integerPart, 10);
+      if (!isNaN(num)) {
+        integerPart = num.toLocaleString('vi-VN');
+      }
+    } else if (parts.length > 1) {
+        // Trường hợp gõ dấu phẩy ngay đầu ví dụ ",5" -> "0,5"
+        integerPart = "0";
+    }
+
+    // Ghép lại với phần thập phân
+    return decimalPart !== null ? `${integerPart},${decimalPart}` : integerPart;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let inputValue = e.target.value;
     
@@ -40,10 +63,12 @@ export const NumberInput: React.FC<NumberInputProps> = ({
     // Chỉ cho phép tối đa 1 dấu phẩy thập phân
     if ((inputValue.match(/,/g) || []).length > 1) return;
 
-    setDisplayValue(inputValue);
+    // Định dạng ngay lập tức khi đang gõ
+    const formatted = formatWhileTyping(inputValue);
+    setDisplayValue(formatted);
     
     // Parse để cập nhật giá trị số thực cho logic tính toán
-    const numericValue = parseVND(inputValue);
+    const numericValue = parseVND(formatted);
     if (!isNaN(numericValue)) {
       onChange(numericValue);
     }
@@ -55,7 +80,7 @@ export const NumberInput: React.FC<NumberInputProps> = ({
 
   const handleBlur = () => {
     isFocused.current = false;
-    // Khi thoát focus, định dạng lại số cho đẹp (ví dụ "1,50" -> "1,5")
+    // Khi thoát focus, định dạng lại chuẩn cuối cùng
     setDisplayValue(formatVND(value));
   };
 
