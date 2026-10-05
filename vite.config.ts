@@ -6,7 +6,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
 
   return {
-    base: '/bangquyettoan/',
+    base: process.env.VITE_BASE_PATH || './',
     plugins: [react()],
     server: {
       port: 3000,
