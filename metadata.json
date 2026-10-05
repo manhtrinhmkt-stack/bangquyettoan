@@ -1,0 +1,5 @@
+{
+  "name": "Bảng Quyết Toán Công Việc",
+  "description": "Ứng dụng lập bảng quyết toán xây dựng/công việc với tính năng tự động tính toán, hỗ trợ nhiều chế độ nhập liệu và đọc số thành chữ tiếng Việt.",
+  "requestFramePermissions": []
+}
